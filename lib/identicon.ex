@@ -9,16 +9,22 @@ defmodule Identicon do
 
   def build_grid(%Identicon.Image{hex: hex} = image) do
     # Enum.chunk returns a list with nested lists that have 3 elements each. 
-    hex
-    |> Enum.chunk(3)
-    |> mirror_row
+    grid =
+      hex
+      |> Enum.chunk(3)
+      # Pass reference to a function. '/' how many arguments the function takes.
+      |> Enum.map(&mirror_row/1)
+      |> List.flatten
+      # Turns every element into a two element tuple. 
+      |> Enum.with_index
 
+    %Identicon.Image{image | grid: grid}
   end
 
   def mirror_row(row) do
     # ++ is for joining lists
     [first, second | _tail] = row
-     
+
     row ++ [second, first]
   end
 
