@@ -7,6 +7,24 @@ defmodule Identicon do
     |> build_grid
     |> filter_odd_squares
     |> build_pixel_map
+    |> draw_image
+    # Argument provided will be the second argument
+    |> save_image(input)
+  end
+
+  def save_image(image, input) do
+    File.write("#{input}.png", image)
+  end
+
+  def draw_image(%Identicon.Image{color: color, pixel_map: pixel_map}) do
+    image = :egd.create(250, 250)
+    fill = :egd.color(color)
+    # For doing a processing step on each element. Not transforming it.
+    Enum.each pixel_map, fn({start, stop}) ->
+      :egd.filledRectangle(image, start, stop, fill)
+    end 
+    # returns image by using the Erlang graphical library. 
+    :egd.render(image)
   end
 
   def build_pixel_map(%Identicon.Image{grid: grid} = image) do
