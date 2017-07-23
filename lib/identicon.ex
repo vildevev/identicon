@@ -8,7 +8,10 @@ defmodule Identicon do
 
   def hash_input(input) do
     # Using pipe operator makes more idiomatic Elixir code. 
-    :crypto.hash(:md5, input)
+    hex = :crypto.hash(:md5, input)
     |> :binary.bin_to_list
+
+    # Assign the value to the struct 
+    %Identicon.Image{hex: hex}
   end
 end
