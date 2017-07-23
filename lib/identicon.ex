@@ -7,6 +7,21 @@ defmodule Identicon do
     |> pick_color
   end
 
+  def build_grid(%Identicon.Image{hex: hex} = image) do
+    # Enum.chunk returns a list with nested lists that have 3 elements each. 
+    hex
+    |> Enum.chunk(3)
+    |> mirror_row
+
+  end
+
+  def mirror_row(row) do
+    # ++ is for joining lists
+    [first, second | _tail] = row
+     
+    row ++ [second, first]
+  end
+
   def pick_color(%Identicon.Image{hex: [r, g, b | _tail]} = image) do 
     # Use pattern matching to set the list equal to the hex_list variable.
     # Have to perfectly describe element on the right for pattern matching to work unless using pipe and '_tail'.
@@ -15,6 +30,7 @@ defmodule Identicon do
     # We don't modify existing data. We are creating an entirely new struct that's smiliar to the original with new colors added.
     %Identicon.Image{image | color: {r, g, b}}
   end
+
 
   def hash_input(input) do
     # Using pipe operator makes more idiomatic Elixir code. 
